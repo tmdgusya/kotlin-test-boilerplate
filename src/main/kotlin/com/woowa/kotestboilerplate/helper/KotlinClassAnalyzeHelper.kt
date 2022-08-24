@@ -18,7 +18,10 @@ class KotlinClassAnalyzeHelper(
     fun getMethod(className: String, methodName: String): PsiMethod {
         val clazz = getClass(className)
 
-        return clazz.allMethods.first { it.name == methodName }
+        val methods = clazz.allMethods.filter { it.name == methodName }
+        require(methods.isNotEmpty()) { "Is not exist method in class" }
+
+        return methods.first()
     }
 
 }
