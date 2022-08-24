@@ -30,7 +30,7 @@
     <depends>org.jetbrains.kotlin</depends>
     <actions>
         <action id="kotest-boilerplate.popUpCreateBoilerPalte"
-                class="com.woowa.kotestboilerplate.actions.CreateBoilerPalte" text="create test boiler plate"
+                class="com.woowa.kotestboilerplate.actions.CreateTestBoilerPlate" text="create test boiler plate"
                 description="create test boiler plate">
             <add-to-group group-id="EditorPopupMenu" anchor="first"/>
             <keyboard-shortcut keymap="$default" first-keystroke="alt T"/>

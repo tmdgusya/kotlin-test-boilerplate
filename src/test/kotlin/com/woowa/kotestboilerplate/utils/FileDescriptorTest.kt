@@ -1,9 +1,8 @@
-package com.woowa.kotestboilerplate.actions
+package com.woowa.kotestboilerplate.utils
 
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.CommonDataKeys
 import com.intellij.psi.impl.source.PsiJavaFileImpl
-import com.woowa.kotestboilerplate.utils.FileDescriptor
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.matchers.shouldBe
