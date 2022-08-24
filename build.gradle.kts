@@ -7,8 +7,20 @@ plugins {
 group = "com.woowa"
 version = "1.0-SNAPSHOT"
 
+// custom variable
+val kotestVersion = "5.3.0"
+val mockkVersion = "1.12.7"
+
 repositories {
     mavenCentral()
+}
+
+dependencies {
+    testImplementation(platform("org.junit:junit-bom:5.9.0"))
+    testImplementation("org.junit.jupiter:junit-jupiter")
+    testImplementation("io.kotest:kotest-runner-junit5:$kotestVersion")
+    testImplementation("io.kotest:kotest-assertions-core:$kotestVersion")
+    testImplementation("io.mockk:mockk:${mockkVersion}")
 }
 
 // Configure Gradle IntelliJ Plugin
@@ -17,7 +29,7 @@ intellij {
     version.set("2021.3")
     type.set("IC") // Target IDE Platform
 
-    plugins.set(listOf(/* Plugin Dependencies */))
+    plugins.set(listOf("org.jetbrains.kotlin"))
 }
 
 tasks {
@@ -28,6 +40,10 @@ tasks {
     }
     withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
         kotlinOptions.jvmTarget = "11"
+    }
+
+    withType<Test>().configureEach {
+        useJUnitPlatform()
     }
 
     patchPluginXml {

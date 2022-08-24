@@ -8,18 +8,18 @@
     <name>Kotest-boilerplate</name>
 
     <!-- A displayed Vendor name or Organization ID displayed on the Plugins Page. -->
-    <vendor email="support@yourcompany.com" url="https://www.yourcompany.com">YourCompany</vendor>
+    <vendor email="roach@woowahan.com" url="https://www.yourcompany.com">Woowa Brothers</vendor>
 
     <!-- Description of the plugin displayed on the Plugin Page and IDE Plugin Manager.
          Simple HTML elements (text formatting, paragraphs, and lists) can be added inside of <![CDATA[ ]]> tag.
          Guidelines: https://plugins.jetbrains.com/docs/marketplace/plugin-overview-page.html#plugin-description -->
     <description><![CDATA[
-    Enter short description for your plugin here.<br>
+    To make boiler plate that use with Kotest <br>
     <em>most HTML tags may be used</em>
   ]]></description>
 
     <!-- Product and plugin compatibility requirements.
-         Read more: https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html -->
+         Read more: https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html -->Œ
     <depends>com.intellij.modules.platform</depends>
 
     <!-- Extension points defined by the plugin.
@@ -27,4 +27,13 @@
     <extensions defaultExtensionNs="com.intellij">
 
     </extensions>
+    <depends>org.jetbrains.kotlin</depends>
+    <actions>
+        <action id="kotest-boilerplate.popUpCreateBoilerPalte"
+                class="com.woowa.kotestboilerplate.actions.CreateBoilerPalte" text="create test boiler plate"
+                description="create test boiler plate">
+            <add-to-group group-id="EditorPopupMenu" anchor="first"/>
+            <keyboard-shortcut keymap="$default" first-keystroke="alt T"/>
+        </action>
+    </actions>
 </idea-plugin>
