@@ -1,7 +1,9 @@
 package com.woowa.kotestboilerplate.helper
 
 import com.intellij.psi.PsiClass
+import com.intellij.psi.PsiField
 import com.intellij.psi.PsiMethod
+import com.intellij.psi.PsiType
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.matchers.shouldBe
@@ -72,6 +74,32 @@ class KotlinClassAnalyzeHelperTest : BehaviorSpec({
             }
             then("thow IllegalArgumentException that contain message is 'Is not exist method in class'") {
                 exception.message shouldBe "Is not exist method in class"
+            }
+        }
+    }
+
+    given("given ktFile and ClassName") {
+        val className = "TestClass"
+        val mockPsiField = mockk<PsiField>(relaxed = true) {
+            every { name } returns "age"
+            every { type } returns PsiType.INT
+        }
+        val mockPsiClass = mockk<PsiClass>(relaxed = true) {
+            every { name } returns className
+            every { allFields } returns arrayOf(mockPsiField)
+        }
+        val ktFiles = mockk<KtFile>(relaxed = true) {
+            every { classes } returns arrayOf(mockPsiClass)
+        }
+        val kotlinClassAnalyzeHelper = KotlinClassAnalyzeHelper(ktFile = ktFiles)
+        `when`("when execute getProperties() method") {
+            val properties = kotlinClassAnalyzeHelper.getProperties(className = className)
+            then("then return properties list that contained class") {
+                properties.size shouldBe 1
+
+                val property = properties[0]
+                property.name shouldBe "age"
+                property.type shouldBe PsiType.INT
             }
         }
     }

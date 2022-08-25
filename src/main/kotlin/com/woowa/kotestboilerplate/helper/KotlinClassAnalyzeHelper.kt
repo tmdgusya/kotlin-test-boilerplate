@@ -1,6 +1,7 @@
 package com.woowa.kotestboilerplate.helper
 
 import com.intellij.psi.PsiClass
+import com.intellij.psi.PsiField
 import com.intellij.psi.PsiMethod
 import org.jetbrains.kotlin.psi.KtFile
 
@@ -22,6 +23,12 @@ class KotlinClassAnalyzeHelper(
         require(methods.isNotEmpty()) { "Is not exist method in class" }
 
         return methods.first()
+    }
+
+    fun getProperties(className: String): Array<PsiField> {
+        val clazz = getClass(className)
+
+        return clazz.allFields
     }
 
 }
