@@ -13,7 +13,11 @@ class KotlinClassAnalyzeHelper(
     private val ktFile: KtFile
 ) {
     fun getClass(className: String): PsiClass {
-        return ktFile.classes.first { it.name == className }
+        val clazz = ktFile.classes.filter { it.name == className }
+
+        require(clazz.isNotEmpty()) { "Not Exist Class($className)" }
+
+        return clazz.first()
     }
 
     fun getMethod(className: String, methodName: String): PsiMethod {

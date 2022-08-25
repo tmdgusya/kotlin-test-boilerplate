@@ -32,6 +32,24 @@ class KotlinClassAnalyzeHelperTest : BehaviorSpec({
         }
     }
 
+    given("given ktFile and wrong className") {
+        val className = "TestClass"
+        val mockPsiClass = mockk<PsiClass>(relaxed = true) {
+            every { name } returns "WrongClass"
+        }
+        val ktFiles = mockk<KtFile>(relaxed = true) {
+            every { classes } returns arrayOf(mockPsiClass)
+        }
+        val kotlinClassAnalyzeHelper = KotlinClassAnalyzeHelper(ktFile = ktFiles)
+        `when`("when execute getClass(className)") {
+            val exception = shouldThrow<IllegalArgumentException>
+                {  kotlinClassAnalyzeHelper.getClass(className = className) }
+            then("throw IllegalArgumentException('Not Exist Class($className)')") {
+                exception.message shouldBe "Not Exist Class($className)"
+            }
+        }
+    }
+
     given("given ktFile and ClassName and specific methodName") {
         val className = "TestClass"
         val methodName = "testMethod"
