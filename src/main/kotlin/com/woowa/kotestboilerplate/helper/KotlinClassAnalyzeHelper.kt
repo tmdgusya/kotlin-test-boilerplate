@@ -35,4 +35,8 @@ class KotlinClassAnalyzeHelper(
         return clazz.allFields
     }
 
+    fun getPackagePath(): String {
+        return ktFile.packageFqName.asString()
+    }
+
 }

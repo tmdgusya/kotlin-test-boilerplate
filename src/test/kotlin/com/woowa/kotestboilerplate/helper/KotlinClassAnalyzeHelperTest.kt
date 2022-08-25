@@ -9,6 +9,7 @@ import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
+import org.jetbrains.kotlin.name.FqName
 import org.jetbrains.kotlin.psi.KtFile
 import java.lang.IllegalArgumentException
 
@@ -68,6 +69,22 @@ class KotlinClassAnalyzeHelperTest : BehaviorSpec({
             val method = kotlinClassAnalyzeHelper.getMethod(className = className, methodName = methodName)
             then("return Class Name is given class Name") {
                 method.name shouldBe methodName
+            }
+        }
+    }
+
+    given("[FindPackagePath Test] given ktFile and className") {
+        val fqName = mockk<FqName>(relaxed = true) {
+            every { asString() } returns "com.woowa.kotestboilerplate.helper"
+        }
+        val ktFiles = mockk<KtFile>(relaxed = true) {
+            every { packageFqName } returns fqName
+        }
+        val kotlinClassAnalyzeHelper = KotlinClassAnalyzeHelper(ktFile = ktFiles)
+        `when`("when execute getPackagePath()") {
+            val packagePath = kotlinClassAnalyzeHelper.getPackagePath()
+            then("then return packagePath() is com.woowa.kotestboilerplate.helper") {
+                packagePath shouldBe "com.woowa.kotestboilerplate.helper"
             }
         }
     }
