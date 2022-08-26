@@ -6,7 +6,6 @@ import com.intellij.openapi.editor.Caret
 import com.intellij.openapi.editor.CaretModel
 import com.intellij.openapi.editor.Editor
 import com.intellij.psi.PsiFile
-import com.intellij.psi.util.PsiEditorUtil
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.matchers.shouldBe
@@ -17,7 +16,7 @@ import java.lang.IllegalArgumentException
 class CreateTestBoilerPlateTest : BehaviorSpec({
 
     given("Not in a file") {
-        val templateAction = CreateTestBoilerPlate()
+        val templateAction = CreateTestBoilerPlateActionHandler()
 
         val actionMock = mockk<AnActionEvent>(relaxed = true) {
             every { getData(CommonDataKeys.PSI_FILE) } returns null
@@ -32,7 +31,7 @@ class CreateTestBoilerPlateTest : BehaviorSpec({
 
     given("if user didn't drag anything") {
 
-        val templateAction = CreateTestBoilerPlate()
+        val templateAction = CreateTestBoilerPlateActionHandler()
 
         val mockPsiFile = mockk<PsiFile>(relaxed = true)
         val mockCaret = mockk<Caret>(relaxed = true) {
