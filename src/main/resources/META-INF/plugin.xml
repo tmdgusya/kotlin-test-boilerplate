@@ -8,7 +8,7 @@
     <name>Kotest-boilerplate</name>
 
     <!-- A displayed Vendor name or Organization ID displayed on the Plugins Page. -->
-    <vendor email="roach@woowahan.com" url="https://www.yourcompany.com">Woowa Brothers</vendor>
+    <vendor email="dev0jsh@gmail.com" url="https://devroach.tistory.com/">Roach</vendor>
 
     <!-- Description of the plugin displayed on the Plugin Page and IDE Plugin Manager.
          Simple HTML elements (text formatting, paragraphs, and lists) can be added inside of <![CDATA[ ]]> tag.
@@ -29,11 +29,6 @@
     </extensions>
     <depends>org.jetbrains.kotlin</depends>
     <actions>
-        <action id="kotest-boilerplate.popUpCreateBoilerPalte"
-                class="com.woowa.kotestboilerplate.actions.CreateTestBoilerPlateActionHandler" text="create test boiler plate"
-                description="create test boiler plate">
-            <add-to-group group-id="EditorPopupMenu" anchor="first"/>
-            <keyboard-shortcut keymap="$default" first-keystroke="alt T"/>
-        </action>
+        <action id="GotoTest" class="com.woowa.kotestboilerplate.actions.GotoTestOrCodeActionExtenstion" overrides="true"/>
     </actions>
 </idea-plugin>
