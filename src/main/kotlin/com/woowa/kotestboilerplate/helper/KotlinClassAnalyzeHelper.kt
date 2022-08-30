@@ -20,6 +20,11 @@ class KotlinClassAnalyzeHelper(
         return clazz.first()
     }
 
+    fun getClass(): PsiClass {
+        if (ktFile.classes.isEmpty()) throw IllegalAccessException("")
+        return ktFile.classes.first()
+    }
+
     fun getMethod(className: String, methodName: String): PsiMethod {
         val clazz = getClass(className)
 

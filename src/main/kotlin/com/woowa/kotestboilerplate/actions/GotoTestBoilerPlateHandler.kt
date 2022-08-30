@@ -6,7 +6,9 @@ import com.intellij.psi.PsiFile
 import com.intellij.testIntegration.GotoTestOrCodeHandler
 import javax.swing.Icon
 
-class GotoTestBoilerPlateHandler : GotoTestOrCodeHandler() {
+class GotoTestBoilerPlateHandler(
+    private val createTestActionHandler: CreateTestActionHandler = CreateTestActionHandler()
+) : GotoTestOrCodeHandler() {
     override fun getSourceAndTargetElements(editor: Editor?, file: PsiFile?): GotoData? {
         val sourceAndTargetElements = super.getSourceAndTargetElements(editor, file) ?: return null
         sourceAndTargetElements.additionalActions.add(0, object : AdditionalAction {
@@ -19,8 +21,12 @@ class GotoTestBoilerPlateHandler : GotoTestOrCodeHandler() {
             }
 
             override fun execute() {
-                println("Hello")
-                println("Execute Create Test")
+                println("Execute!")
+                createTestActionHandler.invoke(
+                    file!!.project,
+                    editor,
+                    file
+                )
             }
         })
 
