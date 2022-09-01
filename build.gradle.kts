@@ -1,5 +1,6 @@
 plugins {
     id("java")
+    kotlin("kapt") version "1.7.10"
     id("org.jetbrains.kotlin.jvm") version "1.6.20"
     id("org.jetbrains.intellij") version "1.6.0"
 }
@@ -18,6 +19,7 @@ repositories {
 dependencies {
     testImplementation(platform("org.junit:junit-bom:5.9.0"))
     testImplementation("org.junit.jupiter:junit-jupiter")
+    implementation("com.squareup:kotlinpoet:1.12.0")
     testImplementation("io.kotest:kotest-runner-junit5:$kotestVersion")
     testImplementation("io.kotest:kotest-assertions-core:$kotestVersion")
     testImplementation("io.mockk:mockk:${mockkVersion}")
