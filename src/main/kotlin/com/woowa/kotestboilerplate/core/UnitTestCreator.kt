@@ -5,7 +5,6 @@ import com.intellij.openapi.module.ModuleUtilCore
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.roots.ModuleRootManager
 import com.intellij.psi.PsiClassOwner
-import com.intellij.psi.PsiDirectory
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFileFactory
 import com.intellij.psi.PsiManager
@@ -14,19 +13,16 @@ import com.squareup.kotlinpoet.FileSpec
 import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeSpec
-import com.woowa.kotestboilerplate.helper.CreateTestFileHelper
-import com.woowa.kotestboilerplate.helper.KotlinClassAnalyzeHelper
+import com.woowa.kotestboilerplate.parser.KotlinClassParserImpl
 import com.woowa.kotestboilerplate.utils.FileDescriptor
-import org.jetbrains.kotlin.idea.caches.project.isTestModule
-import java.io.File
 
 class UnitTestCreator : KotestCreator {
     override fun createTestClass(project: Project, editor: Editor, element: PsiElement) {
         val file = element.containingFile
-        val kotlinClassAnalyzeHelper = KotlinClassAnalyzeHelper(
+        val kotlinClassParserImpl = KotlinClassParserImpl(
             ktFile = FileDescriptor.convertKotlinFile(file)
         )
-        val containClass = kotlinClassAnalyzeHelper.getClass()
+        val containClass = kotlinClassParserImpl.getClass()
 
         val srcModule = ModuleUtilCore.findModuleForFile(element.containingFile)
 

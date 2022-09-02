@@ -4,6 +4,7 @@ import com.intellij.psi.PsiClass
 import com.intellij.psi.PsiField
 import com.intellij.psi.PsiMethod
 import com.intellij.psi.PsiType
+import com.woowa.kotestboilerplate.parser.KotlinClassParserImpl
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.matchers.shouldBe
@@ -14,7 +15,7 @@ import org.jetbrains.kotlin.psi.KtFile
 import java.lang.IllegalArgumentException
 
 
-class KotlinClassAnalyzeHelperTest : BehaviorSpec({
+class KotlinClassParserTest : BehaviorSpec({
 
     given("given ktFile and className") {
         val className = "TestClass"
@@ -24,9 +25,9 @@ class KotlinClassAnalyzeHelperTest : BehaviorSpec({
         val ktFiles = mockk<KtFile>(relaxed = true) {
             every { classes } returns arrayOf(mockPsiClass)
         }
-        val kotlinClassAnalyzeHelper = KotlinClassAnalyzeHelper(ktFile = ktFiles)
+        val kotlinClassParserImpl = KotlinClassParserImpl(ktFile = ktFiles)
         `when`("when execute getClass(className)") {
-            val clazz = kotlinClassAnalyzeHelper.getClass(className = className)
+            val clazz = kotlinClassParserImpl.getClass(className = className)
             then("return Class Name is given class Name") {
                 clazz.name shouldBe className
             }
@@ -41,10 +42,10 @@ class KotlinClassAnalyzeHelperTest : BehaviorSpec({
         val ktFiles = mockk<KtFile>(relaxed = true) {
             every { classes } returns arrayOf(mockPsiClass)
         }
-        val kotlinClassAnalyzeHelper = KotlinClassAnalyzeHelper(ktFile = ktFiles)
+        val kotlinClassParserImpl = KotlinClassParserImpl(ktFile = ktFiles)
         `when`("when execute getClass(className)") {
             val exception = shouldThrow<IllegalArgumentException>
-                {  kotlinClassAnalyzeHelper.getClass(className = className) }
+                {  kotlinClassParserImpl.getClass(className = className) }
             then("throw IllegalArgumentException('Not Exist Class($className)')") {
                 exception.message shouldBe "Not Exist Class($className)"
             }
@@ -64,9 +65,9 @@ class KotlinClassAnalyzeHelperTest : BehaviorSpec({
         val ktFiles = mockk<KtFile>(relaxed = true) {
             every { classes } returns arrayOf(mockPsiClass)
         }
-        val kotlinClassAnalyzeHelper = KotlinClassAnalyzeHelper(ktFile = ktFiles)
+        val kotlinClassParserImpl = KotlinClassParserImpl(ktFile = ktFiles)
         `when`("when execute getClass(className)") {
-            val method = kotlinClassAnalyzeHelper.getMethod(className = className, methodName = methodName)
+            val method = kotlinClassParserImpl.getMethod(className = className, methodName = methodName)
             then("return Class Name is given class Name") {
                 method.name shouldBe methodName
             }
@@ -80,9 +81,9 @@ class KotlinClassAnalyzeHelperTest : BehaviorSpec({
         val ktFiles = mockk<KtFile>(relaxed = true) {
             every { packageFqName } returns fqName
         }
-        val kotlinClassAnalyzeHelper = KotlinClassAnalyzeHelper(ktFile = ktFiles)
+        val kotlinClassParserImpl = KotlinClassParserImpl(ktFile = ktFiles)
         `when`("when execute getPackagePath()") {
-            val packagePath = kotlinClassAnalyzeHelper.getPackagePath()
+            val packagePath = kotlinClassParserImpl.getPackagePath()
             then("then return packagePath() is com.woowa.kotestboilerplate.helper") {
                 packagePath shouldBe "com.woowa.kotestboilerplate.helper"
             }
@@ -102,10 +103,10 @@ class KotlinClassAnalyzeHelperTest : BehaviorSpec({
         val ktFiles = mockk<KtFile>(relaxed = true) {
             every { classes } returns arrayOf(mockPsiClass)
         }
-        val kotlinClassAnalyzeHelper = KotlinClassAnalyzeHelper(ktFile = ktFiles)
+        val kotlinClassParserImpl = KotlinClassParserImpl(ktFile = ktFiles)
         `when`("when execute getClass(className)") {
             val exception = shouldThrow<IllegalArgumentException> {
-                kotlinClassAnalyzeHelper.getMethod(className = className, methodName = methodName)
+                kotlinClassParserImpl.getMethod(className = className, methodName = methodName)
             }
             then("thow IllegalArgumentException that contain message is 'Is not exist method in class'") {
                 exception.message shouldBe "Is not exist method in class"
@@ -126,15 +127,52 @@ class KotlinClassAnalyzeHelperTest : BehaviorSpec({
         val ktFiles = mockk<KtFile>(relaxed = true) {
             every { classes } returns arrayOf(mockPsiClass)
         }
-        val kotlinClassAnalyzeHelper = KotlinClassAnalyzeHelper(ktFile = ktFiles)
+        val kotlinClassParserImpl = KotlinClassParserImpl(ktFile = ktFiles)
         `when`("when execute getProperties() method") {
-            val properties = kotlinClassAnalyzeHelper.getProperties(className = className)
+            val properties = kotlinClassParserImpl.getProperties()
             then("then return properties list that contained class") {
                 properties.size shouldBe 1
 
                 val property = properties[0]
                 property.name shouldBe "age"
                 property.type shouldBe PsiType.INT
+            }
+        }
+    }
+
+    given("given kotlin File") {
+        val className = "TestClass"
+        val mockPsiClass = mockk<PsiClass>(relaxed = true) {
+            every { name } returns className
+        }
+        val ktFile = mockk<KtFile>(relaxed = true) {
+            every { classes } returns arrayOf(mockPsiClass)
+        }
+        `when`("execute getClassName()") {
+            val kotlinClassParserImpl = KotlinClassParserImpl(ktFile = ktFile)
+            then("should return first ClassName") {
+                val _className = kotlinClassParserImpl.getClassName()
+
+                _className shouldBe className
+            }
+        }
+    }
+
+    given("[Exception TEST] given kotlin File that not contained class") {
+        val mockPsiClass = mockk<PsiClass>(relaxed = true) {
+            every { name } returns null
+        }
+        val ktFile = mockk<KtFile>(relaxed = true) {
+            every { classes } returns arrayOf(mockPsiClass)
+        }
+        `when`("execute getClassName()") {
+            val kotlinClassParserImpl = KotlinClassParserImpl(ktFile = ktFile)
+            then("should throw NoSuchElementException") {
+                val exception = shouldThrow<NoSuchElementException> {
+                    kotlinClassParserImpl.getClassName()
+                }
+
+                exception.message shouldBe "Not Exist Class in this File"
             }
         }
     }

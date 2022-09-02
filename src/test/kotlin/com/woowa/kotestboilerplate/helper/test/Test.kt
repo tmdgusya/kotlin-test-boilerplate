@@ -1,4 +1,4 @@
-package com.woowa.kotestboilerplate.test
+package com.woowa.kotestboilerplate.helper.test
 
 class Test(
         val name: String,
