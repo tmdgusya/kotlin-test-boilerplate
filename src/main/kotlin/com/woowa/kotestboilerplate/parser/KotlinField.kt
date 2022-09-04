@@ -2,10 +2,6 @@ package com.woowa.kotestboilerplate.parser
 
 import com.intellij.psi.PsiAnnotation
 import com.intellij.psi.PsiField
-import com.intellij.psi.PsiType
-import com.intellij.psi.util.PsiUtil
-import org.jetbrains.kotlin.idea.refactoring.fqName.getKotlinFqName
-import kotlin.reflect.KClass
 
 data class KotlinField(
     val name: String,
@@ -17,17 +13,9 @@ data class KotlinField(
         fun of(psiField: PsiField): KotlinField {
             return KotlinField(
                 name = psiField.name,
-                type = KotlinType.of(convertKotlinType(psiField.type)),
+                type = KotlinType.of(psiField.type),
                 annotation = psiField.annotations
             )
-        }
-
-        /**
-         * PsiType to Kotlin Type
-         */
-        private fun convertKotlinType(psiType: PsiType): KClass<out Any> {
-            val typeClass = PsiUtil.resolveClassInType(psiType) ?: throw IllegalArgumentException("")
-            return Class.forName(typeClass.getKotlinFqName().toString()).kotlin
         }
     }
 

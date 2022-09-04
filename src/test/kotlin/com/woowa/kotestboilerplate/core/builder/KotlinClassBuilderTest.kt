@@ -27,7 +27,7 @@ class KotlinClassBuilderTest : BehaviorSpec({
                         "import io.kotest.core.spec.style.BehaviorSpec\n" +
                         "import io.mockk.mockk\n" +
                         "\n" +
-                        "public class $mockClassName : BehaviorSpec({})\n" +
+                        "public class ${mockClassName}Test : BehaviorSpec({\n})\n" +
                         ""
             }
         }
@@ -41,6 +41,7 @@ class KotlinClassBuilderTest : BehaviorSpec({
         val mockKotlinType = mockk<KotlinType>(relaxed = true) {
             every { simpleName } returns mockType
             every { fqName } returns ""
+            every { wrappedType } returns null
         }
         val mockKotlinField = mockk<KotlinField>(relaxed = true) {
             every { name } returns mockFieldName
@@ -63,7 +64,50 @@ class KotlinClassBuilderTest : BehaviorSpec({
                         "import io.mockk.mockk\n" +
                         "\n" +
                         "public class ${mockClassName}Test : " +
-                        "BehaviorSpec({val $mockFieldName: $mockType = mockk<${mockType}>(relaxed = true)\n" +
+                        "BehaviorSpec({\nval $mockFieldName: $mockType = mockk<>(relaxed = true)\n" +
+                        "})\n"
+            }
+        }
+    }
+
+    given("given Class Name And Parameter with TypeParameter") {
+        val mockPackageName = "com.woowa.kotestboilerplate"
+        val mockClassName = "TestClass"
+        val mockType = "List"
+
+        val wrappertType = "Long"
+        val mockFieldName = "ages"
+        val mockWrappetKotlinType = mockk<KotlinType>(relaxed = true) {
+            every { simpleName } returns wrappertType
+            every { fqName } returns ""
+        }
+        val mockKotlinType = mockk<KotlinType>(relaxed = true) {
+            every { simpleName } returns mockType
+            every { fqName } returns ""
+            every { wrappedType } returns mockWrappetKotlinType
+        }
+        val mockKotlinField = mockk<KotlinField>(relaxed = true) {
+            every { name } returns mockFieldName
+            every { type } returns mockKotlinType
+        }
+        val kotlinClassMetaData = mockk<KotlinClassMetaData> {
+            every { className } returns mockClassName
+            every { packageName } returns mockPackageName
+            every { properties } returns listOf(mockKotlinField)
+        }
+        val kotlinTestBuilder = KotlinPoetTestBuilder(
+            kotlinClassMetaData =  kotlinClassMetaData,
+        )
+        `when`("when execute buildClass() ") {
+            val classContent = kotlinTestBuilder.buildUnitTestClass()
+            then("classContent is public class TestClass") {
+                classContent shouldBe "package com.woowa.kotestboilerplate\n" +
+                        "\n" +
+                        "import io.kotest.core.spec.style.BehaviorSpec\n" +
+                        "import io.mockk.mockk\n" +
+                        "\n" +
+                        "public class TestClassTest : BehaviorSpec({\n" +
+                        "val ages: List<Long> = mockk<>(relaxed = true)\n" +
                         "})\n"
             }
         }
