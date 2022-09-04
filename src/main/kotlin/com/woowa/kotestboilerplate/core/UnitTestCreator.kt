@@ -9,10 +9,8 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFileFactory
 import com.intellij.psi.PsiManager
 import com.intellij.testIntegration.createTest.CreateTestAction
-import com.squareup.kotlinpoet.FileSpec
-import com.squareup.kotlinpoet.FunSpec
-import com.squareup.kotlinpoet.PropertySpec
-import com.squareup.kotlinpoet.TypeSpec
+import com.woowa.kotestboilerplate.core.builder.KotlinPoetTestBuilder
+import com.woowa.kotestboilerplate.parser.KotlinClassMetaData
 import com.woowa.kotestboilerplate.parser.KotlinClassParserImpl
 import com.woowa.kotestboilerplate.utils.FileDescriptor
 
@@ -23,9 +21,7 @@ class UnitTestCreator : KotestCreator {
             ktFile = FileDescriptor.convertKotlinFile(file)
         )
         val containClass = kotlinClassParserImpl.getClass()
-
         val srcModule = ModuleUtilCore.findModuleForFile(element.containingFile)
-
         val testModule = CreateTestAction.suggestModuleForTests(
             project,
             srcModule ?: throw IllegalArgumentException("")
@@ -33,26 +29,13 @@ class UnitTestCreator : KotestCreator {
 
         // build to testFile Structure
         val owner = file as PsiClassOwner
-        val result = FileSpec
-            .builder(owner.packageName, "${containClass.name}Test.kt")
-            .addType(TypeSpec.classBuilder("${containClass.name}Test").primaryConstructor(
-                FunSpec.constructorBuilder()
-                    .addParameter("name", String::class)
-                    .build()
-                )
-                .addProperty(
-                    PropertySpec.builder("name", String::class)
-                        .initializer("name")
-                        .build()
-                )
-                .addFunction(
-                    FunSpec.builder("greet")
-                        .addStatement("println(%P)", "Hello, \$name")
-                        .build()
-                )
-                .build())
-            .build()
-            .toString()
+        val testFileResource = KotlinPoetTestBuilder(
+            kotlinClassMetaData = KotlinClassMetaData(
+                properties = kotlinClassParserImpl.getProperties(),
+                className = containClass.name ?: throw IllegalArgumentException(""),
+                packageName = owner.packageName,
+            )
+        ).buildUnitTestClass()
 
 
         // the properties that need to create testFile
@@ -61,7 +44,11 @@ class UnitTestCreator : KotestCreator {
         val psiFileFactory = PsiFileFactory.getInstance(project)
 
         // createTestFile
-        val testFile = psiFileFactory.createFileFromText("${containClass.name}Test.kt", KotlinFileType(), result)
+        val testFile = psiFileFactory.createFileFromText(
+            "${containClass.name}Test.kt",
+            KotlinFileType(),
+            testFileResource
+        )
         directory?.add(testFile)
     }
 }

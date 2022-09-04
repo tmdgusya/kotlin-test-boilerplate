@@ -1,7 +1,6 @@
 package com.woowa.kotestboilerplate.parser
 
 import com.intellij.psi.PsiClass
-import com.intellij.psi.PsiField
 import com.intellij.psi.PsiMethod
 import org.jetbrains.kotlin.psi.KtFile
 import java.util.NoSuchElementException

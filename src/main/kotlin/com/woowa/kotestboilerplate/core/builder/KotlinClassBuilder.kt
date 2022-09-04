@@ -4,6 +4,6 @@ typealias KotlinClassContent = String
 
 interface KotlinClassBuilder {
 
-    fun buildClass(): KotlinClassContent
+    fun buildUnitTestClass(): KotlinClassContent
 
 }

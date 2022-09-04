@@ -21,7 +21,6 @@ class GotoTestBoilerPlateHandler(
             }
 
             override fun execute() {
-                println("Execute!")
                 createTestActionHandler.invoke(
                     file!!.project,
                     editor,
