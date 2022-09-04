@@ -25,7 +25,7 @@ open class KotlinPoetTestBuilder(
         return addType(TypeSpec
             .classBuilder(convertClassName())
             .superclass(ClassName("io.kotest.core.spec.style", "BehaviorSpec"))
-            .addSuperclassConstructorParameter(CodeBlock.of("{${addPropertiesToString()}}"))
+            .addSuperclassConstructorParameter(CodeBlock.of("{\n${addPropertiesToString()}}"))
             .build()
         )
     }
@@ -47,7 +47,7 @@ open class KotlinPoetTestBuilder(
                 )
                 .initializer("mockk<${it.type.simpleName}>(relaxed = true)")
                 .build()
-        }.joinToString("\n")
+        }.joinToString("")
     }
     private fun convertToTestFile(): String {
         return "${convertClassName()}.kt"

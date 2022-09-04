@@ -1,5 +1,6 @@
 package com.woowa.kotestboilerplate.actions
 
+import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiElement
@@ -12,10 +13,12 @@ class CreateTestActionHandler(
 ) : CreateTestAction() {
 
     override fun invoke(project: Project, editor: Editor?, element: PsiElement) {
-        kotestCreator.createTestClass(
-            project = project,
-            editor = editor ?: throw IllegalAccessException(),
-            element = element
-        )
+        ApplicationManager.getApplication().runWriteAction {
+            kotestCreator.createTestClass(
+                project = project,
+                editor = editor ?: throw IllegalAccessException(),
+                element = element
+            )
+        }
     }
 }

@@ -41,6 +41,8 @@ class UnitTestCreator : KotestCreator {
         // the properties that need to create testFile
         val testRoot = ModuleRootManager.getInstance(testModule)
         val directory = testRoot.sourceRoots.firstNotNullOfOrNull { PsiManager.getInstance(project).findDirectory(it) }
+        println(directory?.isDirectory)
+        println(directory?.name)
         val psiFileFactory = PsiFileFactory.getInstance(project)
 
         // createTestFile
