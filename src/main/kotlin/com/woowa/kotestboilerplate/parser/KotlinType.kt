@@ -1,5 +1,6 @@
 package com.woowa.kotestboilerplate.parser
 
+import com.intellij.psi.PsiArrayType
 import com.intellij.psi.PsiType
 import com.intellij.psi.impl.source.PsiClassReferenceType
 import com.intellij.psi.util.PsiUtil
@@ -34,7 +35,7 @@ data class KotlinType(
         }
 
         private fun convertKotlinWrapperType(psiType: PsiType): KotlinType? {
-            if ((psiType as PsiClassReferenceType).parameters.isNotEmpty()) {
+            if (psiType !is PsiArrayType && (psiType as PsiClassReferenceType).parameters.isNotEmpty()) {
                 return of(psiType.parameters[0])
             }
             return null

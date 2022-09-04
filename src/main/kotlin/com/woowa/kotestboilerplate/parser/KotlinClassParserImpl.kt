@@ -2,6 +2,7 @@ package com.woowa.kotestboilerplate.parser
 
 import com.intellij.psi.PsiClass
 import com.intellij.psi.PsiMethod
+import com.intellij.psi.PsiType
 import org.jetbrains.kotlin.psi.KtFile
 import java.util.NoSuchElementException
 
@@ -37,7 +38,9 @@ class KotlinClassParserImpl(
     override fun getProperties(): List<KotlinField> {
         val clazz = getClass()
 
-        return clazz.allFields.map { KotlinField.of(it) }
+        return clazz.allFields
+            .filter { it.type.isExcludeType() }
+            .map { KotlinField.of(it) }
     }
 
     override fun getPackagePath(): String {
@@ -46,6 +49,13 @@ class KotlinClassParserImpl(
 
     override fun getClassName(): String {
         return getClass().name ?: throw NoSuchElementException("Not Exist Class in this File")
+    }
+
+    private fun PsiType.isExcludeType(): Boolean {
+        if (this.canonicalText.contains("Companion")) {
+            return false
+        }
+        return true
     }
 
 }
