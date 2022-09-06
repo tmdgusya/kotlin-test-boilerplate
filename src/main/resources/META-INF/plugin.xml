@@ -14,9 +14,17 @@
          Simple HTML elements (text formatting, paragraphs, and lists) can be added inside of <![CDATA[ ]]> tag.
          Guidelines: https://plugins.jetbrains.com/docs/marketplace/plugin-overview-page.html#plugin-description -->
     <description><![CDATA[
-    To make boiler plate that use with Kotest <br>
-    <em>most HTML tags may be used</em>
-  ]]></description>
+      <br>Plugin for Kotlin to create test boiler template code</br>
+      <br> Fast use it with short cut key CMD + Shift + T</br>
+      <b><br>Features:</br></b>
+        <br>Generate Test boilerplate code when create unit test
+        <p><img src="https://user-images.githubusercontent.com/57784077/188525568-0f445024-bbb6-45a0-9d13-fb3e2c371789.gif" alt="demo" width="600" height="360"></p>
+      <em>kotlin</em>
+      <em>kotest<em>
+      <em>mockk<em>
+      <br></br>
+     <a href="https://github.com/tmdgusya/kotlin-test-boilerplate"> Github</a></br>
+    ]]></description>
 
     <!-- Product and plugin compatibility requirements.
          Read more: https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html -->Œ
