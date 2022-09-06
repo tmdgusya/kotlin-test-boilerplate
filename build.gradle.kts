@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "com.woowa"
-version = "0.0.1-beta"
+version = "0.0.1-alpha"
 
 // custom variable
 val kotestVersion = "5.3.0"

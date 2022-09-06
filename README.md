@@ -16,7 +16,7 @@ It's easily accessible, we provide shortcut keymap `cmd + shift + t` that you us
 
 Generally, we mock every property that be injected by other when we create unit-test.
 
-![example01](https://user-images.githubusercontent.com/57784077/188525568-0f445024-bbb6-45a0-9d13-fb3e2c371789.gif)
+![beta-example](https://user-images.githubusercontent.com/57784077/188673250-f8616094-c5a8-457e-b805-4a62221c012d.gif)
 
 
 ## Features
