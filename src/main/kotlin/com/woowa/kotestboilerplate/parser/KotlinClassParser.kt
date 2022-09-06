@@ -6,6 +6,6 @@ interface KotlinClassParser {
 
     fun getClassName(): String
 
-    fun getPackagePath(): String
+    fun getDirectoryAndPackage(): String
 
 }

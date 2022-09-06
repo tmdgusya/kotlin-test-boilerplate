@@ -64,7 +64,7 @@ class KotlinClassBuilderTest : BehaviorSpec({
                         "import io.mockk.mockk\n" +
                         "\n" +
                         "public class ${mockClassName}Test : " +
-                        "BehaviorSpec({\nval $mockFieldName: $mockType = mockk<>(relaxed = true)\n" +
+                        "BehaviorSpec({\nval $mockFieldName: $mockType = mockk(relaxed = true)\n" +
                         "})\n"
             }
         }
@@ -107,7 +107,7 @@ class KotlinClassBuilderTest : BehaviorSpec({
                         "import io.mockk.mockk\n" +
                         "\n" +
                         "public class TestClassTest : BehaviorSpec({\n" +
-                        "val ages: List<Long> = mockk<>(relaxed = true)\n" +
+                        "val ages: List<Long> = mockk(relaxed = true)\n" +
                         "})\n"
             }
         }

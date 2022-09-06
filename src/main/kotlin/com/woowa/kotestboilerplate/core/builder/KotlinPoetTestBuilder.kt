@@ -49,7 +49,7 @@ open class KotlinPoetTestBuilder(
                     it.name,
                     type = propertyTypeBuild(it.type).addTypeParameterIfIsWrapperType(it.type)
                 )
-                .initializer("mockk<>(relaxed = true)")
+                .initializer("mockk(relaxed = true)")
                 .build()
         }.joinToString("")
     }

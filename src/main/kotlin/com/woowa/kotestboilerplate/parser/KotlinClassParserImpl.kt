@@ -43,8 +43,8 @@ class KotlinClassParserImpl(
             .map { KotlinField.of(it) }
     }
 
-    override fun getPackagePath(): String {
-        return ktFile.packageFqName.asString()
+    override fun getDirectoryAndPackage(): String {
+        return ktFile.packageFqName.toString()
     }
 
     override fun getClassName(): String {
