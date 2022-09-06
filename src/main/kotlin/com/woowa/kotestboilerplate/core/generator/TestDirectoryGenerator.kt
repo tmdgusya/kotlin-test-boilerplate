@@ -26,7 +26,9 @@ class TestDirectoryGenerator(
         val testRoot = ModuleRootManager.getInstance(testModule)
         val psiManager = PsiManager.getInstance(project)
 
-        val testModuleRoot = testRoot.sourceRoots.firstNotNullOfOrNull {
+        val testModuleRoot = testRoot.sourceRoots
+            .filter { it.name.contains("kotlin") }
+            .firstNotNullOfOrNull {
             psiManager.findDirectory(it)
         } ?: throw IllegalArgumentException("Test Module doesn't exist")
         val testDirectoryPath = createTestDirectoryPath(testModuleRoot)

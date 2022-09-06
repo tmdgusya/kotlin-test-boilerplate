@@ -6,6 +6,7 @@ import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiClassOwner
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFileFactory
+import com.intellij.psi.impl.source.codeStyle.JavaCodeStyleManagerImpl
 import com.woowa.kotestboilerplate.core.builder.KotlinPoetTestBuilder
 import com.woowa.kotestboilerplate.core.generator.TestDirectoryGenerator
 import com.woowa.kotestboilerplate.parser.KotlinClassMetaData
@@ -44,6 +45,8 @@ class UnitTestCreator : KotestCreator {
             KotlinFileType(),
             testFileResource
         )
+
+        JavaCodeStyleManagerImpl(project).optimizeImports(testFile)
 
         testDirectory.add(testFile)
     }
