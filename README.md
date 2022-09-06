@@ -25,5 +25,34 @@ Generally, we mock every property that be injected by other when we create unit-
 
 ## Contributes
 
-Unfortunately, we can't be contributed at this time. This Plugin need time to stabilize.
+Unfortunately, you can't contribute at this time. This Plugin need time to stabilize.
+But, you can contribute to some pattern that used to create some test code
 We want to be in a state where we can get other people's contributions as soon as possible.
+
+## Report TestBoilerPlate pattern
+
+If you want to report some pattern that you are frequently used when creating a test class, then Follow the process below
+
+1. **[Issue] - [New Issue]**
+2. **Write title ("My Unit Test Boiler Plate Pattern ...")**
+3. **Write sudo code by kotlin styles.**
+```kotlin
+
+// This is not test class
+@Service
+class OrderService(private val repository: OrderRepsoitory) {
+    
+    fun order() {
+        // doSome ...
+    }
+    
+}
+
+// This is test class that be made by kotlin-boilerplate plugins
+class OrderServiceTestClass : FunSpec({
+    
+    val mockRepository: OrderRepsoitory = mock<>(relaxed = true)
+    // SUT
+    val orderService = OrderService(mockRepository)
+})
+```
