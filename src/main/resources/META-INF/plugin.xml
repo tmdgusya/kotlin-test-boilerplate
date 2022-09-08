@@ -36,6 +36,7 @@
 
     </extensions>
     <depends>org.jetbrains.kotlin</depends>
+    <depends>com.intellij.modules.java</depends>
     <actions>
         <action id="GotoTest" class="com.woowa.kotestboilerplate.actions.GotoTestOrCodeActionExtension" overrides="true"/>
     </actions>
