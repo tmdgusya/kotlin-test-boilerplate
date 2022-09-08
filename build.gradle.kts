@@ -30,7 +30,7 @@ intellij {
     version.set("2021.3")
     type.set("IC") // Target IDE Platform
 
-    plugins.set(listOf("org.jetbrains.kotlin"))
+    plugins.set(listOf("org.jetbrains.kotlin", "com.intellij.java"))
 }
 
 tasks {
