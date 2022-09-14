@@ -18,7 +18,11 @@
       <br> Fast use it with short cut key CMD + Shift + T</br>
       <b><br>Features:</br></b>
         <br>Generate Test boilerplate code when create unit test
-        <p><img src="https://user-images.githubusercontent.com/57784077/188673250-f8616094-c5a8-457e-b805-4a62221c012d.gif" alt="demo" width="600" height="360"></p>
+        <h3>BehaviourSpec & FunSpec</h3>
+        <p><img src="https://user-images.githubusercontent.com/57784077/190173720-73d223fd-d55f-4724-b7ab-361cec74e882.gif" alt="demo" width="600" height="360"></p>
+        <h3>FreeSpec</h3>
+        <p><img src="https://user-images.githubusercontent.com/57784077/190173957-c5afbe23-27fc-48ba-abc3-46314573c181.gif" alt="demo" width="600" height="360"/></p>
+        <p>you should check method mock check box if you want to get method name for test</p>
       <em>kotlin</em>
       <em>kotest<em>
       <em>mockk<em>
