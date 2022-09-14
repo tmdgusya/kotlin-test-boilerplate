@@ -16,7 +16,13 @@ It's easily accessible, we provide shortcut keymap `cmd + shift + t` that you us
 
 Generally, we mock every property that be injected by other when we create unit-test.
 
-![beta-example](https://user-images.githubusercontent.com/57784077/188673250-f8616094-c5a8-457e-b805-4a62221c012d.gif)
+### BehaviourSpec & FunSpec
+
+![BehaviourSpec](https://user-images.githubusercontent.com/57784077/190173720-73d223fd-d55f-4724-b7ab-361cec74e882.gif)
+
+### FreeSpec
+
+![FunSpec](https://user-images.githubusercontent.com/57784077/190173957-c5afbe23-27fc-48ba-abc3-46314573c181.gif)
 
 
 ## Features
