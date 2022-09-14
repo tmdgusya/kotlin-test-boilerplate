@@ -2,6 +2,7 @@ package com.woowa.kotestboilerplate.parser
 
 import com.intellij.psi.PsiClass
 import com.intellij.psi.PsiField
+import com.intellij.psi.PsiMethod
 import com.intellij.psi.PsiType
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
@@ -76,6 +77,23 @@ class KotlinClassParserImplTest : FunSpec({
 
         result.size shouldNotBe 2
         result[0].name shouldBe fieldName
+    }
+
+    test("return all methods in the file") {
+        val methods = mockk<PsiMethod>(relaxed = true) {
+            every { name } returns "getAttr"
+        }
+        val firstClass = mockk<PsiClass>(relaxed = true) {
+            every { allMethods } returns arrayOf(methods)
+        }
+        ktFile.let {
+            every { it.classes } returns arrayOf(firstClass)
+        }
+
+        val result = sut.getMethods()
+
+        result.size shouldBe 1
+        result[0].name shouldBe "getAttr"
     }
 
     afterEach {

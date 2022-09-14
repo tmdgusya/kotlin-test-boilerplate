@@ -7,11 +7,14 @@ import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.plusParameter
 import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeName
 import com.squareup.kotlinpoet.TypeSpec
+import com.woowa.kotestboilerplate.core.generator.TestCodeGenerator
 import com.woowa.kotestboilerplate.parser.KotlinClassMetaData
 import com.woowa.kotestboilerplate.parser.KotlinType
 
 open class KotlinPoetTestBuilder(
     private val kotlinClassMetaData: KotlinClassMetaData,
+    private val testBuilderConfig: TestBuilderConfig,
+    private val testCodeGenerator: TestCodeGenerator,
 ) : KotlinClassBuilder {
 
     override fun buildUnitTestClass(): KotlinClassContent {
@@ -27,8 +30,10 @@ open class KotlinPoetTestBuilder(
     private fun FileSpec.Builder.buildTestClass(): FileSpec.Builder {
         return addType(TypeSpec
             .classBuilder(convertClassName())
-            .superclass(ClassName("io.kotest.core.spec.style", "BehaviorSpec"))
-            .addSuperclassConstructorParameter(CodeBlock.of("{\n${addPropertiesToString()}}"))
+            .superclass(ClassName("io.kotest.core.spec.style", testBuilderConfig.spec.name))
+            .addSuperclassConstructorParameter(
+                CodeBlock.of("{\n${addPropertiesToString()}${testCodeGenerator.buildCodeBlock()}}")
+            )
             .build()
         )
     }

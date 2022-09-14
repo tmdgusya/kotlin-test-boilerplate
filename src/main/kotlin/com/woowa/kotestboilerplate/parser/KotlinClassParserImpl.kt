@@ -58,4 +58,10 @@ class KotlinClassParserImpl(
         return true
     }
 
+    fun getMethods(): Array<PsiMethod> {
+        val clazz = getClass()
+
+        return clazz.methods
+    }
+
 }

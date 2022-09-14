@@ -1,5 +1,6 @@
 package com.woowa.kotestboilerplate.core.builder
 
+import com.woowa.kotestboilerplate.core.generator.BehaviourSpecGenerator
 import com.woowa.kotestboilerplate.parser.KotlinClassMetaData
 import com.woowa.kotestboilerplate.parser.KotlinField
 import com.woowa.kotestboilerplate.parser.KotlinType
@@ -10,6 +11,8 @@ import io.mockk.mockk
 
 class KotlinClassBuilderTest : BehaviorSpec({
 
+    val behaviourSpecGenerator = mockk<BehaviourSpecGenerator>(relaxed = true)
+
     given("given Class Name") {
         val mockPackageName = "com.woowa.kotestboilerplate"
         val mockClassName = "TestClass"
@@ -18,7 +21,8 @@ class KotlinClassBuilderTest : BehaviorSpec({
             every { packageName } returns mockPackageName
             every { properties } returns emptyList()
         }
-        val kotlinTestBuilder = KotlinPoetTestBuilder(kotlinClassMetaData)
+        val testConfig = TestBuilderConfig()
+        val kotlinTestBuilder = KotlinPoetTestBuilder(kotlinClassMetaData, testConfig, behaviourSpecGenerator)
         `when`("when execute buildClass() ") {
             val classContet = kotlinTestBuilder.buildUnitTestClass()
             then("classContent is public class TestClass") {
@@ -52,8 +56,11 @@ class KotlinClassBuilderTest : BehaviorSpec({
             every { packageName } returns mockPackageName
             every { properties } returns listOf(mockKotlinField)
         }
+        val testConfig = TestBuilderConfig()
         val kotlinTestBuilder = KotlinPoetTestBuilder(
             kotlinClassMetaData =  kotlinClassMetaData,
+            testBuilderConfig = testConfig,
+            behaviourSpecGenerator
         )
         `when`("when execute buildClass() ") {
             val classContent = kotlinTestBuilder.buildUnitTestClass()
@@ -95,8 +102,11 @@ class KotlinClassBuilderTest : BehaviorSpec({
             every { packageName } returns mockPackageName
             every { properties } returns listOf(mockKotlinField)
         }
+        val testConfig = TestBuilderConfig()
         val kotlinTestBuilder = KotlinPoetTestBuilder(
             kotlinClassMetaData =  kotlinClassMetaData,
+            testBuilderConfig = testConfig,
+            behaviourSpecGenerator
         )
         `when`("when execute buildClass() ") {
             val classContent = kotlinTestBuilder.buildUnitTestClass()
