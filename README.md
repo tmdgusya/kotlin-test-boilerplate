@@ -24,6 +24,7 @@ Generally, we mock every property that be injected by other when we create unit-
 
 ![FunSpec](https://user-images.githubusercontent.com/57784077/190173957-c5afbe23-27fc-48ba-abc3-46314573c181.gif)
 
+- you should check method mock check box if you want to get method name for test
 
 ## Features
 
