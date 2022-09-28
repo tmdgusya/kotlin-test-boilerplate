@@ -13,12 +13,10 @@ class CreateTestActionHandler(
 ) : CreateTestAction() {
 
     override fun invoke(project: Project, editor: Editor?, element: PsiElement) {
-        ApplicationManager.getApplication().runWriteAction {
-            kotestCreator.createTestClass(
-                project = project,
-                editor = editor ?: throw IllegalAccessException(),
-                element = element
-            )
-        }
+        kotestCreator.createTestClass(
+            project = project,
+            editor = editor ?: throw IllegalAccessException(),
+            element = element
+        )
     }
 }

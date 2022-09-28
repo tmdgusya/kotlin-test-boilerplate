@@ -1,5 +1,6 @@
 package com.woowa.kotestboilerplate.core
 
+import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.module.ModuleUtilCore
 import com.intellij.openapi.project.Project
@@ -36,32 +37,35 @@ class UnitTestCreator : KotestCreator {
 
         TestUiDslDialog(project, testConfig).showAndGet()
 
-        val testCodeGenerator = TestCodeGeneratorFactory.create(testConfig.spec, metaData, testConfig)
-        println("${testConfig.isNeedMethod} | ${testConfig.spec}")
 
-        // build to testFile Structure
-        val testFileResource = KotlinPoetTestBuilder(
-            kotlinClassMetaData = metaData,
-            testBuilderConfig = testConfig,
-            testCodeGenerator = testCodeGenerator
-        ).buildUnitTestClass()
+        ApplicationManager.getApplication().runWriteAction {
+            val testCodeGenerator = TestCodeGeneratorFactory.create(testConfig.spec, metaData, testConfig)
+            println("${testConfig.isNeedMethod} | ${testConfig.spec}")
 
-        val testDirectory = TestDirectoryGenerator(
-            project = project,
-            srcModule = srcModule ?: throw IllegalArgumentException(""),
-            currentlyDirectoryInfo = kotlinClassParserImpl.getDirectoryAndPackage()
-        ).createDirectoryIfNotExist()
+            // build to testFile Structure
+            val testFileResource = KotlinPoetTestBuilder(
+                kotlinClassMetaData = metaData,
+                testBuilderConfig = testConfig,
+                testCodeGenerator = testCodeGenerator
+            ).buildUnitTestClass()
 
-        // createTestFile
-        val psiFileFactory = PsiFileFactory.getInstance(project)
-        val testFile = psiFileFactory.createFileFromText(
-            "${containClass.name}Test.kt",
-            KotlinFileType(),
-            testFileResource
-        )
+            val testDirectory = TestDirectoryGenerator(
+                project = project,
+                srcModule = srcModule ?: throw IllegalArgumentException(""),
+                currentlyDirectoryInfo = kotlinClassParserImpl.getDirectoryAndPackage()
+            ).createDirectoryIfNotExist()
 
-        JavaCodeStyleManagerImpl(project).optimizeImports(testFile)
+            // createTestFile
+            val psiFileFactory = PsiFileFactory.getInstance(project)
+            val testFile = psiFileFactory.createFileFromText(
+                "${containClass.name}Test.kt",
+                KotlinFileType(),
+                testFileResource
+            )
 
-        testDirectory.add(testFile)
+            JavaCodeStyleManagerImpl(project).optimizeImports(testFile)
+
+            testDirectory.add(testFile)
+        }
     }
 }
