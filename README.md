@@ -28,7 +28,15 @@ Generally, we mock every property that be injected by other when we create unit-
 
 ## Features
 
-- Unit Test Boiler Plate
+Version[0.0.1]
+  - Unit Test Boiler Plate
+  - Support FunSpec, Behaviour Spec, FreeSpec
+  - Auto Mocking Properties which is contained specific class
+  - [Bug fix](https://github.com/tmdgusya/kotlin-test-boilerplate/issues/13)
+
+Version[0.0.2]
+  - [Navigate to class that created by this library](https://github.com/tmdgusya/kotlin-test-boilerplate/issues/14)
+  - [Create Option that can be selected relaxed option for mockk](https://github.com/tmdgusya/kotlin-test-boilerplate/issues/12)
 
 ## Contributes
 
