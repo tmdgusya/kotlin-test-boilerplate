@@ -1,20 +1,22 @@
 package com.woowa.kotestboilerplate.view
 
 import com.intellij.openapi.application.WriteActionAware
+import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.DialogPanel
 import com.intellij.openapi.ui.DialogWrapper
+import com.intellij.psi.PsiElement
 import com.intellij.ui.dsl.builder.Cell
 import com.intellij.ui.dsl.builder.panel
+import com.woowa.kotestboilerplate.core.UnitTestCreator
 import com.woowa.kotestboilerplate.core.builder.SupportKotestSpec
 import com.woowa.kotestboilerplate.core.builder.TestBuilderConfig
 import java.awt.event.ItemEvent
 import javax.swing.JCheckBox
 import javax.swing.JComponent
 
-fun testConfigurationViewer(configure: TestBuilderConfig, project: Project?): DialogPanel {
+fun testConfigurationViewer(configure: TestBuilderConfig): DialogPanel {
     lateinit var isMethodNeedCheckBox: Cell<JCheckBox>
-    lateinit var isChooseRelaxOptions: Cell<JCheckBox>
     val panel = panel {
         row {
             dropDownLink(
@@ -37,7 +39,8 @@ fun testConfigurationViewer(configure: TestBuilderConfig, project: Project?): Di
             )
         }
         row {
-            isChooseRelaxOptions = checkBox("generate with relaxed mock").applyToComponent {
+            checkBox("generate with relaxed mock").applyToComponent {
+                isSelected = true
                 addItemListener {
                     if (it.stateChange == ItemEvent.SELECTED) {
                         configure.isRelaxed = it.stateChange.isSelected()
@@ -59,12 +62,14 @@ fun testConfigurationViewer(configure: TestBuilderConfig, project: Project?): Di
 }
 
 private fun Int.isSelected(): Boolean {
-    return if (this == 1) true else false
+    return this == 1
 }
 
 class TestUiDslDialog(
     private val project: Project?,
-    private val configure: TestBuilderConfig
+    private val editor: Editor?,
+    private val element: PsiElement,
+    private val testConfig: TestBuilderConfig
 ) : DialogWrapper(project, true), WriteActionAware {
 
     init {
@@ -76,7 +81,18 @@ class TestUiDslDialog(
         return false
     }
 
+    override fun doOKAction() {
+        val kotestCreator = UnitTestCreator()
+        kotestCreator.createTestClass(
+            project = project!!,
+            editor = editor ?: throw IllegalAccessException(),
+            element = element,
+            testConfig = testConfig
+        )
+        super.doOKAction()
+    }
+
     override fun createCenterPanel(): JComponent {
-        return testConfigurationViewer(configure, project)
+        return testConfigurationViewer(testConfig)
     }
 }

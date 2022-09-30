@@ -1,22 +1,16 @@
 package com.woowa.kotestboilerplate.actions
 
-import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiElement
 import com.intellij.testIntegration.createTest.CreateTestAction
-import com.woowa.kotestboilerplate.core.KotestCreator
-import com.woowa.kotestboilerplate.core.UnitTestCreator
+import com.woowa.kotestboilerplate.core.builder.TestBuilderConfig
+import com.woowa.kotestboilerplate.view.TestUiDslDialog
 
-class CreateTestActionHandler(
-    private val kotestCreator: KotestCreator = UnitTestCreator()
-) : CreateTestAction() {
+class CreateTestActionHandler : CreateTestAction() {
 
     override fun invoke(project: Project, editor: Editor?, element: PsiElement) {
-        kotestCreator.createTestClass(
-            project = project,
-            editor = editor ?: throw IllegalAccessException(),
-            element = element
-        )
+        val testConfig = TestBuilderConfig()
+        TestUiDslDialog(project, editor, element, testConfig).showAndGet()
     }
 }

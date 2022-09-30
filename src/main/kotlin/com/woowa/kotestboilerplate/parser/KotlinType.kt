@@ -6,7 +6,6 @@ import com.intellij.psi.PsiWildcardType
 import com.intellij.psi.impl.source.PsiClassReferenceType
 import com.intellij.psi.util.PsiUtil
 import org.jetbrains.kotlin.idea.refactoring.fqName.getKotlinFqName
-
 data class KotlinType(
     val simpleName: String,
     val fqName: String,

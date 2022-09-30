@@ -102,7 +102,7 @@ class KotlinClassBuilderTest : BehaviorSpec({
             every { packageName } returns mockPackageName
             every { properties } returns listOf(mockKotlinField)
         }
-        val testConfig = TestBuilderConfig()
+        val testConfig = TestBuilderConfig(isRelaxed = true)
         val kotlinTestBuilder = KotlinPoetTestBuilder(
             kotlinClassMetaData =  kotlinClassMetaData,
             testBuilderConfig = testConfig,
