@@ -80,11 +80,11 @@ class KotlinClassParserImplTest : FunSpec({
     }
 
     test("return all methods in the file") {
-        val methods = mockk<PsiMethod>(relaxed = true) {
+        val mockMethod = mockk<PsiMethod>(relaxed = true) {
             every { name } returns "getAttr"
         }
         val firstClass = mockk<PsiClass>(relaxed = true) {
-            every { allMethods } returns arrayOf(methods)
+            every { methods } returns arrayOf(mockMethod)
         }
         ktFile.let {
             every { it.classes } returns arrayOf(firstClass)

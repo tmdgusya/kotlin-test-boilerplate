@@ -12,8 +12,9 @@ import java.awt.event.ItemEvent
 import javax.swing.JCheckBox
 import javax.swing.JComponent
 
-fun testConfigurationViewer(configure: TestBuilderConfig): DialogPanel {
+fun testConfigurationViewer(configure: TestBuilderConfig, project: Project?): DialogPanel {
     lateinit var isMethodNeedCheckBox: Cell<JCheckBox>
+    lateinit var isChooseRelaxOptions: Cell<JCheckBox>
     val panel = panel {
         row {
             dropDownLink(
@@ -36,10 +37,19 @@ fun testConfigurationViewer(configure: TestBuilderConfig): DialogPanel {
             )
         }
         row {
+            isChooseRelaxOptions = checkBox("generate with relaxed mock").applyToComponent {
+                addItemListener {
+                    if (it.stateChange == ItemEvent.SELECTED) {
+                        configure.isRelaxed = it.stateChange.isSelected()
+                    }
+                }
+            }.enabled(true)
+        }
+        row {
             isMethodNeedCheckBox = checkBox("method mock(only FreeSpec)").applyToComponent {
                 addItemListener {
                     if (it.stateChange == ItemEvent.SELECTED) {
-                        configure.isNeedMethod = true
+                        configure.isNeedMethod = !configure.isNeedMethod
                     }
                 }
             }.enabled(false)
@@ -48,8 +58,12 @@ fun testConfigurationViewer(configure: TestBuilderConfig): DialogPanel {
     return panel
 }
 
+private fun Int.isSelected(): Boolean {
+    return if (this == 1) true else false
+}
+
 class TestUiDslDialog(
-    project: Project?,
+    private val project: Project?,
     private val configure: TestBuilderConfig
 ) : DialogWrapper(project, true), WriteActionAware {
 
@@ -63,6 +77,6 @@ class TestUiDslDialog(
     }
 
     override fun createCenterPanel(): JComponent {
-        return testConfigurationViewer(configure)
+        return testConfigurationViewer(configure, project)
     }
 }

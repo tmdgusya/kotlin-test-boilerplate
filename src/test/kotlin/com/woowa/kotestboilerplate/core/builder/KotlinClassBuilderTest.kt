@@ -123,4 +123,46 @@ class KotlinClassBuilderTest : BehaviorSpec({
         }
     }
 
+    given("if selected relaxedMock is falsy") {
+        val mockPackageName = "com.woowa.kotestboilerplate"
+        val mockClassName = "TestClass"
+        val mockType = "Int"
+        val mockFieldName = "ages"
+
+        val mockKotlinType = mockk<KotlinType>(relaxed = true) {
+            every { simpleName } returns mockType
+            every { fqName } returns ""
+            every { wrappedType } returns null
+        }
+
+        val mockKotlinField = mockk<KotlinField>(relaxed = true) {
+            every { name } returns mockFieldName
+            every { type } returns mockKotlinType
+        }
+        val kotlinClassMetaData = mockk<KotlinClassMetaData> {
+            every { className } returns mockClassName
+            every { packageName } returns mockPackageName
+            every { properties } returns listOf(mockKotlinField)
+        }
+        val testConfig = TestBuilderConfig(isRelaxed = false)
+        val kotlinTestBuilder = KotlinPoetTestBuilder(
+            kotlinClassMetaData =  kotlinClassMetaData,
+            testBuilderConfig = testConfig,
+            behaviourSpecGenerator
+        )
+        `when`("when execute buildClass() ") {
+            val classContent = kotlinTestBuilder.buildUnitTestClass()
+            then("The content that (relaxed = true) does not create") {
+                classContent shouldBe "package com.woowa.kotestboilerplate\n" +
+                        "\n" +
+                        "import io.kotest.core.spec.style.BehaviorSpec\n" +
+                        "import io.mockk.mockk\n" +
+                        "\n" +
+                        "public class TestClassTest : BehaviorSpec({\n" +
+                        "val ages: Int = mockk()\n" +
+                        "})\n"
+            }
+        }
+    }
+
 })

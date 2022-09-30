@@ -2,6 +2,7 @@ package com.woowa.kotestboilerplate.parser
 
 import com.intellij.psi.PsiPrimitiveType
 import com.intellij.psi.PsiType
+import com.intellij.psi.PsiWildcardType
 import com.intellij.psi.impl.source.PsiClassReferenceType
 import com.intellij.psi.util.PsiUtil
 import org.jetbrains.kotlin.idea.refactoring.fqName.getKotlinFqName
@@ -30,6 +31,8 @@ data class KotlinType(
                 is PsiPrimitiveType -> {
                     psiType.boxedTypeName.toString() to psiType.canonicalText
                 }
+
+                is PsiWildcardType -> { psiType.presentableText to psiType.getCanonicalText() }
 
                 else -> {
                     val typeClass = PsiUtil.resolveClassInType(psiType) ?: throw IllegalArgumentException("")

@@ -54,9 +54,14 @@ open class KotlinPoetTestBuilder(
                     it.name,
                     type = propertyTypeBuild(it.type).addTypeParameterIfIsWrapperType(it.type)
                 )
-                .initializer("mockk(relaxed = true)")
+                .initializeRelaxedMock(testBuilderConfig.isRelaxed)
                 .build()
         }.joinToString("")
+    }
+
+    private fun PropertySpec.Builder.initializeRelaxedMock(isRelaxed: Boolean): PropertySpec.Builder {
+        if (isRelaxed) this.initializer("mockk(relaxed = true)") else this.initializer("mockk()")
+        return this
     }
 
     private fun propertyTypeBuild(type: KotlinType): ClassName {
