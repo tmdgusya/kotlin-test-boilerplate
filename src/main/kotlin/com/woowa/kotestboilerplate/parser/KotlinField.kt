@@ -10,13 +10,11 @@ data class KotlinField(
 ) {
 
     companion object {
-        fun of(psiField: PsiField): KotlinField {
-            return KotlinField(
-                name = psiField.name,
-                type = KotlinType.of(psiField.type),
-                annotation = psiField.annotations
-            )
-        }
+        fun of(psiField: PsiField): KotlinField = KotlinField(
+            name = psiField.name,
+            type = KotlinType.of(psiField.type),
+            annotation = psiField.annotations
+        )
     }
 
     override fun equals(other: Any?): Boolean {

@@ -13,55 +13,29 @@ import java.util.NoSuchElementException
 class KotlinClassParserImpl(
     private val ktFile: KtFile
 ) : KotlinClassParser {
-    fun getClass(className: String): PsiClass {
-        val clazz = ktFile.classes.filter { it.name == className }
+    fun getClass(className: String): PsiClass = ktFile.classes
+        .filter { it.name == className }
+        .also { require(it.isNotEmpty()) { "Not Exist Class($className)" } }
+        .first()
 
-        require(clazz.isNotEmpty()) { "Not Exist Class($className)" }
+    fun getClass(): PsiClass = ktFile.classes.also { require(it.isNotEmpty()) { "Not Exist Class" } }.first()
 
-        return clazz.first()
-    }
+    fun getMethod(className: String, methodName: String): PsiMethod = getClass(className)
+        .let { it.allMethods.filter { it.name == methodName } }
+        .also { require(it.isNotEmpty()) { "Is not exist method in class" } }
+        .first()
 
-    fun getClass(): PsiClass {
-        if (ktFile.classes.isEmpty()) throw IllegalAccessException("")
-        return ktFile.classes.first()
-    }
+    override fun getProperties(): List<KotlinField> = getClass().allFields
+        .filter { it.type.isExcludeType() }
+        .map { KotlinField.of(it) }
 
-    fun getMethod(className: String, methodName: String): PsiMethod {
-        val clazz = getClass(className)
+    override fun getDirectoryAndPackage(): String = ktFile.packageFqName.toString()
 
-        val methods = clazz.allMethods.filter { it.name == methodName }
-        require(methods.isNotEmpty()) { "Is not exist method in class" }
+    override fun getClassName(): String = getClass().name
+        ?: throw NoSuchElementException("Not Exist Class in this File")
 
-        return methods.first()
-    }
+    private fun PsiType.isExcludeType(): Boolean = !this.canonicalText.contains("Companion")
 
-    override fun getProperties(): List<KotlinField> {
-        val clazz = getClass()
-
-        return clazz.allFields
-            .filter { it.type.isExcludeType() }
-            .map { KotlinField.of(it) }
-    }
-
-    override fun getDirectoryAndPackage(): String {
-        return ktFile.packageFqName.toString()
-    }
-
-    override fun getClassName(): String {
-        return getClass().name ?: throw NoSuchElementException("Not Exist Class in this File")
-    }
-
-    private fun PsiType.isExcludeType(): Boolean {
-        if (this.canonicalText.contains("Companion")) {
-            return false
-        }
-        return true
-    }
-
-    fun getMethods(): Array<PsiMethod> {
-        val clazz = getClass()
-
-        return clazz.methods
-    }
+    fun getMethods(): Array<PsiMethod> = getClass().methods
 
 }

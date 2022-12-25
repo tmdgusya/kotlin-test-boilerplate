@@ -12,46 +12,38 @@ data class KotlinType(
     val wrappedType: KotlinType? = null
 ) {
     companion object {
-        fun of(type: PsiType): KotlinType {
-            val (fqName, simpleName) = convertKotlinType(type)
-            val wrappedType = convertKotlinWrapperType(type)
-            return KotlinType(
-                simpleName = simpleName,
-                fqName = fqName,
-                wrappedType = wrappedType
+        fun of(type: PsiType): KotlinType = convertKotlinType(type).let {
+            KotlinType(
+                simpleName = it.second,
+                fqName = it.first,
+                wrappedType = convertKotlinWrapperType(type)
             )
         }
 
         /**
          * PsiType to Kotlin Type
          */
-        private fun convertKotlinType(psiType: PsiType): Pair<String, String> {
-            return when (psiType) {
-                is PsiPrimitiveType -> {
-                    psiType.boxedTypeName.toString() to psiType.canonicalText
-                }
+        private fun convertKotlinType(psiType: PsiType): Pair<String, String> = when (psiType) {
+            is PsiPrimitiveType -> {
+                psiType.boxedTypeName.toString() to psiType.canonicalText
+            }
 
-                is PsiWildcardType -> { psiType.presentableText to psiType.getCanonicalText() }
+            is PsiWildcardType -> { psiType.presentableText to psiType.getCanonicalText() }
 
-                else -> {
-                    val typeClass = PsiUtil.resolveClassInType(psiType) ?: throw IllegalArgumentException("")
-                    typeClass.getKotlinFqName().toString() to typeClass.name.toString()
-                }
+            else -> {
+                val typeClass = PsiUtil.resolveClassInType(psiType) ?: throw IllegalArgumentException("")
+                typeClass.getKotlinFqName().toString() to typeClass.name.toString()
             }
         }
         /**
          * 파일 이름을 주고 Import 해오는 방식으로 바꿔야함.
          */
-        private fun convertKotlinWrapperType(psiType: PsiType): KotlinType? {
-            return when (psiType) {
-                is PsiClassReferenceType -> {
-                    return if (psiType.parameters.isNotEmpty()) {
-                        return of(psiType.parameters[0])
-                    } else null
-                }
-
-                else -> null
+        private fun convertKotlinWrapperType(psiType: PsiType): KotlinType? = when (psiType) {
+            is PsiClassReferenceType -> {
+                if (psiType.parameters.isNotEmpty()) { of(psiType.parameters[0]) } else null
             }
+
+            else -> null
         }
     }
 }
