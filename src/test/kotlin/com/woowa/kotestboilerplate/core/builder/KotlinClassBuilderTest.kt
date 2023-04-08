@@ -1,28 +1,35 @@
 package com.woowa.kotestboilerplate.core.builder
 
 import com.woowa.kotestboilerplate.core.generator.BehaviourSpecGenerator
+import com.woowa.kotestboilerplate.fixture.Fixture
 import com.woowa.kotestboilerplate.parser.KotlinClassMetaData
 import com.woowa.kotestboilerplate.parser.KotlinField
 import com.woowa.kotestboilerplate.parser.KotlinType
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.matchers.shouldBe
-import io.mockk.every
 import io.mockk.mockk
 
 class KotlinClassBuilderTest : BehaviorSpec({
 
+    val mockPackageName = "com.woowa.kotestboilerplate"
+    val mockClassName = "TestClass"
     val behaviourSpecGenerator = mockk<BehaviourSpecGenerator>(relaxed = true)
 
     given("given Class Name") {
-        val mockPackageName = "com.woowa.kotestboilerplate"
-        val mockClassName = "TestClass"
-        val kotlinClassMetaData = mockk<KotlinClassMetaData> {
-            every { className } returns mockClassName
-            every { packageName } returns mockPackageName
-            every { properties } returns emptyList()
-        }
+
+        val kotlinClassMetaData = KotlinClassMetaData(
+            properties = listOf(),
+            className = mockClassName,
+            packageName = mockPackageName,
+            properTestSourceDir = null,
+            methods = emptyArray(),
+        )
         val testConfig = TestBuilderConfig()
-        val kotlinTestBuilder = KotlinPoetTestBuilder(kotlinClassMetaData, testConfig, behaviourSpecGenerator)
+        val kotlinTestBuilder = Fixture.createSutFactory(
+            metaData = kotlinClassMetaData,
+            testBuilderConfig = testConfig,
+            testCodeGenerator = behaviourSpecGenerator,
+        )
         val expected = """
             package $mockPackageName
             
@@ -44,29 +51,29 @@ class KotlinClassBuilderTest : BehaviorSpec({
     }
 
     given("given Class Name And Property") {
-        val mockPackageName = "com.woowa.kotestboilerplate"
-        val mockClassName = "TestClass"
         val mockType = "Int"
         val mockFieldName = "age"
-        val mockKotlinType = mockk<KotlinType>(relaxed = true) {
-            every { simpleName } returns mockType
-            every { fqName } returns ""
-            every { wrappedType } returns null
-        }
-        val mockKotlinField = mockk<KotlinField>(relaxed = true) {
-            every { name } returns mockFieldName
-            every { type } returns mockKotlinType
-        }
-        val kotlinClassMetaData = mockk<KotlinClassMetaData> {
-            every { className } returns mockClassName
-            every { packageName } returns mockPackageName
-            every { properties } returns listOf(mockKotlinField)
-        }
+        val kotlinClassMetaData = KotlinClassMetaData(
+            properties = listOf(
+                KotlinField(
+                    name = mockFieldName,
+                    type = KotlinType(
+                        simpleName = mockType,
+                        fqName = "",
+                        wrappedType = null,
+                    )
+                )
+            ),
+            className = mockClassName,
+            packageName = mockPackageName,
+            properTestSourceDir = null,
+            methods = emptyArray(),
+        )
         val testConfig = TestBuilderConfig()
-        val kotlinTestBuilder = KotlinPoetTestBuilder(
-            kotlinClassMetaData =  kotlinClassMetaData,
+        val kotlinTestBuilder = Fixture.createSutFactory(
+            metaData = kotlinClassMetaData,
             testBuilderConfig = testConfig,
-            behaviourSpecGenerator
+            testCodeGenerator = behaviourSpecGenerator,
         )
         val expected = """
             package com.woowa.kotestboilerplate
@@ -89,35 +96,30 @@ class KotlinClassBuilderTest : BehaviorSpec({
     }
 
     given("given Class Name And Parameter with TypeParameter") {
-        val mockPackageName = "com.woowa.kotestboilerplate"
-        val mockClassName = "TestClass"
-        val mockType = "List"
-
-        val wrappertType = "Long"
+        val wrapperType = "List"
+        val mockType = "Long"
         val mockFieldName = "ages"
-        val mockWrappetKotlinType = mockk<KotlinType>(relaxed = true) {
-            every { simpleName } returns wrappertType
-            every { fqName } returns ""
-        }
-        val mockKotlinType = mockk<KotlinType>(relaxed = true) {
-            every { simpleName } returns mockType
-            every { fqName } returns ""
-            every { wrappedType } returns mockWrappetKotlinType
-        }
-        val mockKotlinField = mockk<KotlinField>(relaxed = true) {
-            every { name } returns mockFieldName
-            every { type } returns mockKotlinType
-        }
-        val kotlinClassMetaData = mockk<KotlinClassMetaData> {
-            every { className } returns mockClassName
-            every { packageName } returns mockPackageName
-            every { properties } returns listOf(mockKotlinField)
-        }
+        val kotlinClassMetaData = KotlinClassMetaData(
+            properties = listOf(
+                KotlinField(
+                    name = mockFieldName,
+                    type = KotlinType(
+                        simpleName = wrapperType,
+                        fqName = "",
+                        wrappedType = KotlinType(simpleName = mockType, fqName = "", wrappedType = null),
+                    )
+                )
+            ),
+            className = mockClassName,
+            packageName = mockPackageName,
+            properTestSourceDir = null,
+            methods = emptyArray(),
+        )
         val testConfig = TestBuilderConfig(isRelaxed = true)
-        val kotlinTestBuilder = KotlinPoetTestBuilder(
-            kotlinClassMetaData =  kotlinClassMetaData,
+        val kotlinTestBuilder = Fixture.createSutFactory(
+            metaData = kotlinClassMetaData,
             testBuilderConfig = testConfig,
-            behaviourSpecGenerator
+            testCodeGenerator = behaviourSpecGenerator,
         )
         `when`("when execute buildClass() ") {
             val classContent = kotlinTestBuilder.buildUnitTestClass()
@@ -136,31 +138,29 @@ class KotlinClassBuilderTest : BehaviorSpec({
     }
 
     given("if selected relaxedMock is falsy") {
-        val mockPackageName = "com.woowa.kotestboilerplate"
-        val mockClassName = "TestClass"
         val mockType = "Int"
         val mockFieldName = "age"
-
-        val mockKotlinType = mockk<KotlinType>(relaxed = true) {
-            every { simpleName } returns mockType
-            every { fqName } returns ""
-            every { wrappedType } returns null
-        }
-
-        val mockKotlinField = mockk<KotlinField>(relaxed = true) {
-            every { name } returns mockFieldName
-            every { type } returns mockKotlinType
-        }
-        val kotlinClassMetaData = mockk<KotlinClassMetaData> {
-            every { className } returns mockClassName
-            every { packageName } returns mockPackageName
-            every { properties } returns listOf(mockKotlinField)
-        }
+        val kotlinClassMetaData = KotlinClassMetaData(
+            properties = listOf(
+                KotlinField(
+                    name = mockFieldName,
+                    type = KotlinType(
+                        simpleName = mockType,
+                        fqName = "",
+                        wrappedType = null,
+                    )
+                )
+            ),
+            className = mockClassName,
+            packageName = mockPackageName,
+            properTestSourceDir = null,
+            methods = emptyArray(),
+        )
         val testConfig = TestBuilderConfig(isRelaxed = false)
-        val kotlinTestBuilder = KotlinPoetTestBuilder(
-            kotlinClassMetaData =  kotlinClassMetaData,
+        val kotlinTestBuilder = Fixture.createSutFactory(
+            metaData = kotlinClassMetaData,
             testBuilderConfig = testConfig,
-            behaviourSpecGenerator
+            testCodeGenerator = behaviourSpecGenerator,
         )
         val expected = """
             package com.woowa.kotestboilerplate

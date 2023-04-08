@@ -1,7 +1,6 @@
 package com.woowa.kotestboilerplate.core.builder
 
-import com.woowa.kotestboilerplate.core.generator.BehaviourSpecGenerator
-import com.woowa.kotestboilerplate.core.generator.TestCodeGenerator
+import com.woowa.kotestboilerplate.fixture.Fixture
 import com.woowa.kotestboilerplate.parser.KotlinClassMetaData
 import com.woowa.kotestboilerplate.parser.KotlinField
 import com.woowa.kotestboilerplate.parser.KotlinType
@@ -19,7 +18,7 @@ internal class KotlinPoetTestBuilderTest : FunSpec({
             KotlinField("address", KotlinType("String", "kotlin")),
         )
         val expected = properties.joinToString(", ") { it.name }
-        val sut = createSutFactory(
+        val sut = Fixture.createSutFactory(
             KotlinClassMetaData(
                 properties = properties,
                 className = "Test",
@@ -32,13 +31,3 @@ internal class KotlinPoetTestBuilderTest : FunSpec({
         sut.stringConstructorArgs() shouldBe expected
     }
 })
-
-private fun createSutFactory(with: KotlinClassMetaData): KotlinPoetTestBuilder {
-    val testBuilderConfig: TestBuilderConfig = TestBuilderConfig(
-        spec = SupportKotestSpec.BehaviorSpec,
-        isNeedMethod = false,
-        isRelaxed = true,
-    )
-    val testCodeGenerator: TestCodeGenerator = BehaviourSpecGenerator()
-    return KotlinPoetTestBuilder(with, testBuilderConfig, testCodeGenerator)
-}
