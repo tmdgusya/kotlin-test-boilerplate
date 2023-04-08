@@ -23,16 +23,22 @@ class KotlinClassBuilderTest : BehaviorSpec({
         }
         val testConfig = TestBuilderConfig()
         val kotlinTestBuilder = KotlinPoetTestBuilder(kotlinClassMetaData, testConfig, behaviourSpecGenerator)
+        val expected = """
+            package $mockPackageName
+            
+            import io.kotest.core.spec.style.BehaviorSpec
+            import io.mockk.mockk
+            
+            public class ${mockClassName}Test : BehaviorSpec({
+            
+            val sut: $mockClassName = ${mockClassName}()
+            })
+            
+        """.trimIndent()
         `when`("when execute buildClass() ") {
             val classContet = kotlinTestBuilder.buildUnitTestClass()
             then("classContent is public class TestClass") {
-                classContet shouldBe "package ${mockPackageName}\n" +
-                        "\n" +
-                        "import io.kotest.core.spec.style.BehaviorSpec\n" +
-                        "import io.mockk.mockk\n" +
-                        "\n" +
-                        "public class ${mockClassName}Test : BehaviorSpec({\n})\n" +
-                        ""
+                classContet shouldBe expected
             }
         }
     }
@@ -62,17 +68,22 @@ class KotlinClassBuilderTest : BehaviorSpec({
             testBuilderConfig = testConfig,
             behaviourSpecGenerator
         )
+        val expected = """
+            package com.woowa.kotestboilerplate
+
+            import io.kotest.core.spec.style.BehaviorSpec
+            import io.mockk.mockk
+
+            public class TestClassTest : BehaviorSpec({
+            val age: Int = mockk(relaxed = true)
+            val sut: TestClass = TestClass(age)
+            })
+            
+        """.trimIndent()
         `when`("when execute buildClass() ") {
             val classContent = kotlinTestBuilder.buildUnitTestClass()
             then("classContent is public class TestClass") {
-                classContent shouldBe "package ${mockPackageName}\n" +
-                        "\n" +
-                        "import io.kotest.core.spec.style.BehaviorSpec\n" +
-                        "import io.mockk.mockk\n" +
-                        "\n" +
-                        "public class ${mockClassName}Test : " +
-                        "BehaviorSpec({\nval $mockFieldName: $mockType = mockk(relaxed = true)\n" +
-                        "})\n"
+                classContent shouldBe expected
             }
         }
     }
@@ -118,6 +129,7 @@ class KotlinClassBuilderTest : BehaviorSpec({
                         "\n" +
                         "public class TestClassTest : BehaviorSpec({\n" +
                         "val ages: List<Long> = mockk(relaxed = true)\n" +
+                        "val sut: TestClass = TestClass(ages)\n" +
                         "})\n"
             }
         }
@@ -127,7 +139,7 @@ class KotlinClassBuilderTest : BehaviorSpec({
         val mockPackageName = "com.woowa.kotestboilerplate"
         val mockClassName = "TestClass"
         val mockType = "Int"
-        val mockFieldName = "ages"
+        val mockFieldName = "age"
 
         val mockKotlinType = mockk<KotlinType>(relaxed = true) {
             every { simpleName } returns mockType
@@ -150,17 +162,22 @@ class KotlinClassBuilderTest : BehaviorSpec({
             testBuilderConfig = testConfig,
             behaviourSpecGenerator
         )
+        val expected = """
+            package com.woowa.kotestboilerplate
+
+            import io.kotest.core.spec.style.BehaviorSpec
+            import io.mockk.mockk
+
+            public class TestClassTest : BehaviorSpec({
+            val age: Int = mockk()
+            val sut: TestClass = TestClass(age)
+            })
+            
+        """.trimIndent()
         `when`("when execute buildClass() ") {
             val classContent = kotlinTestBuilder.buildUnitTestClass()
             then("The content that (relaxed = true) does not create") {
-                classContent shouldBe "package com.woowa.kotestboilerplate\n" +
-                        "\n" +
-                        "import io.kotest.core.spec.style.BehaviorSpec\n" +
-                        "import io.mockk.mockk\n" +
-                        "\n" +
-                        "public class TestClassTest : BehaviorSpec({\n" +
-                        "val ages: Int = mockk()\n" +
-                        "})\n"
+                classContent shouldBe expected
             }
         }
     }

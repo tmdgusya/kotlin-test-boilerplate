@@ -22,7 +22,7 @@ open class KotlinPoetTestBuilder(
             FileSpec.builder(kotlinClassMetaData.packageName, convertToTestFile())
                 .addImport("io.mockk.mockk", "")
                 .buildTestClass()
-                .doImportProperties()
+                .importProperties()
 
         return fileBuilder.build().toString()
     }
@@ -32,7 +32,14 @@ open class KotlinPoetTestBuilder(
             .classBuilder(convertClassName())
             .superclass(ClassName("io.kotest.core.spec.style", testBuilderConfig.spec.name))
             .addSuperclassConstructorParameter(
-                CodeBlock.of("{\n${addPropertiesToString()}${testCodeGenerator.buildCodeBlock()}}")
+                CodeBlock.of(
+                    """
+                    {
+                    ${addPropertiesToString()}
+                    val sut: ${kotlinClassMetaData.className} = ${kotlinClassMetaData.className}(${stringConstructorArgs()})
+                    ${testCodeGenerator.buildCodeBlock()}}
+                    """.trimIndent()
+                )
             )
             .build()
         )
@@ -41,7 +48,7 @@ open class KotlinPoetTestBuilder(
     /**
      * Import All Properties
      */
-    private fun FileSpec.Builder.doImportProperties(): FileSpec.Builder {
+    private fun FileSpec.Builder.importProperties(): FileSpec.Builder {
         kotlinClassMetaData.properties.forEach {
             if (it.type.fqName.isNotEmpty()) addImport(it.type.fqName, "")
         }
@@ -56,7 +63,7 @@ open class KotlinPoetTestBuilder(
                 )
                 .initializeRelaxedMock(testBuilderConfig.isRelaxed)
                 .build()
-        }.joinToString("")
+        }.joinToString("").trimIndent()
     }
 
     private fun PropertySpec.Builder.initializeRelaxedMock(isRelaxed: Boolean): PropertySpec.Builder {
@@ -81,5 +88,9 @@ open class KotlinPoetTestBuilder(
 
     private fun convertClassName(): String {
         return "${kotlinClassMetaData.className}Test"
+    }
+
+    fun stringConstructorArgs(): String {
+        return kotlinClassMetaData.properties.joinToString(", ") { it.name }
     }
 }
