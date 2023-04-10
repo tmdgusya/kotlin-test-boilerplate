@@ -17,7 +17,7 @@ class GotoTestBoilerPlateHandler(
             }
 
             override fun getIcon(): Icon {
-                return IconLoader.getIcon("/icons/kotest.png")
+                return IconLoader.getIcon("/icons/kotest.png", this::class.java)
             }
 
             override fun execute() {
