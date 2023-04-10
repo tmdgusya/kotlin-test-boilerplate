@@ -5,7 +5,8 @@ import com.intellij.psi.PsiType
 import com.intellij.psi.PsiWildcardType
 import com.intellij.psi.impl.source.PsiClassReferenceType
 import com.intellij.psi.util.PsiUtil
-import org.jetbrains.kotlin.idea.refactoring.fqName.getKotlinFqName
+import org.jetbrains.kotlin.idea.base.psi.kotlinFqName
+
 data class KotlinType(
     val simpleName: String,
     val fqName: String,
@@ -32,7 +33,7 @@ data class KotlinType(
 
             else -> {
                 val typeClass = PsiUtil.resolveClassInType(psiType) ?: throw IllegalArgumentException("")
-                typeClass.getKotlinFqName().toString() to typeClass.name.toString()
+                typeClass.kotlinFqName.toString() to typeClass.name.toString()
             }
         }
         /**
